@@ -15,11 +15,12 @@ from firebase_admin import credentials
 from firebase_admin import storage
 from firebase_admin import db
 
-import py4_predict as predict
-import py5_template as template
-import py2_labelling as label
+import sr03_predict as predict
+import sr04_template as template
+import sr01_make_label_text as label
+import sr05_remove_noise as noise
 
-json_key = 'foruser-86c2a-firebase-adminsdk-o9ghu-8e76c66a0c.json'
+json_key = 'sred-ab0bd-firebase-adminsdk-bz4q4-8e5b74c0e5.json'
 db_url = 'https://foruser-86c2a.firebaseio.com',
 bk_name = 'foruser-86c2a.appspot.com'
 
@@ -30,6 +31,24 @@ main_light = 0
 tol_light = 0
 
 
+###
+# def wav_to_form(file_path, file_name):
+#    # Load the data and calculate the time of each sample
+#    samplerate, data = wavfile.read(file_path + '.wav')
+#    times = np.arange(len(data))/float(samplerate)
+
+#    # Make the plot
+#    # You can tweak the figsize (width, height) in inches
+#    plt.figure(figsize=(1.28, 1.28))
+#    plt.fill_between(times, data[:,0], data[:,1], color='k')
+#    plt.xlim(times[0], times[-1])
+#    plt.axis('off')
+#    # You can set the format by changing the extension
+#    # like .pdf, .svg, .eps
+#    fn= file_path + '.png' ##그래프로 저장할 이름 변경  ##
+#    plt.savefig(fn, dpi=100)
+
+###
 def learning_model(user_id):
     label.make_label(user_id)
     print("	>> success learning")
@@ -83,14 +102,18 @@ def listener(event):
     if event.path == '/':
         return
 
-    flag = event.path.split('/')[-1]
+    flag = event.path.split('/')[-1]  # 이벤트 발생한 child
     user_gr = event.path.split('/')[1]
-    user_id = event.path.split('/')[2]
+    user_id = event.path.split('/')[2]  # 이벤트 발생한 user id
 
     if flag == 'learning' and event.data == 'true':
         print('----> Start learning')
         download_from_fb(user_id, flag)
         convert_wav_file(user_id, flag)
+
+        # wav_thread = threading.Thread(target=convert_wav_file, args=(user_id,))
+        # wav_thread.start()
+        ### converting error >> wav file problem
 
         learning_model(user_id)
 
@@ -112,6 +135,9 @@ def listener(event):
         m_ref = db.reference(path=mpath, url=db_url)
         mode = m_ref.get()
         print("----> Predict type : " + mode)
+
+        noise.rm_noise(user_id)
+        print(" >> remove noise")
 
         if mode == 'deep':
             result = predict.predict_spect(user_id)
@@ -144,13 +170,20 @@ def listener(event):
 if __name__ == '__main__':
     cred = credentials.Certificate(json_key)
 
-    rdb_app = firebase_admin.initialize_app(cred,
-                                            {'databaseURL': 'https://foruser-86c2a.firebaseio.com'},
-                                            name='rdb_app')
-    ref = db.reference(app=rdb_app)
-    str_app = firebase_admin.initialize_app(cred,
-                                            {'storageBucket': 'foruser-86c2a.appspot.com'}, name='str_app')
-    bucket = storage.bucket(app=str_app)
+    # rdb_app = firebase_admin.initialize_app(cred,
+    # 	{'databaseURL': 'https://sred-ab0bd.firebaseio.com'},
+    # 	name='rdb_app'
+    # 	)
+    # ref = db.reference(app=rdb_app)
+    # str_app = firebase_admin.initialize_app(cred,
+    # 	{'storageBucket': 'sred-ab0bd.appspot.com'},
+    # 	name='str_app'
+    # 	)
+    # bucket = storage.bucket(app=str_app)
+
+    firebase_admin.initialize_app(cred)
+    ref = db.reference(url=db_url)
+    bucket = storage.bucket(name=bk_name)
 
     print("# # # # # # # # # # # # # # #\n")
     print("\tStart Listen\n")
