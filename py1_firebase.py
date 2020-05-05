@@ -75,11 +75,6 @@ def listener(event):
     print(event.data)
     print('= = = = = = = = = = = = = = =\n')
 
-    ### 0 : off / 1 : on
-    global liv_light
-    global main_light
-    global tol_light
-
     if event.path == '/':
         return
 
