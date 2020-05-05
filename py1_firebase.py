@@ -25,9 +25,6 @@ bk_name = 'foruser-86c2a.appspot.com'
 
 fb_dir = './firebase'
 
-liv_light = 0
-main_light = 0
-tol_light = 0
 
 
 def learning_model(user_id):
