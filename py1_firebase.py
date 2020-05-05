@@ -16,9 +16,9 @@ from firebase_admin import credentials
 from firebase_admin import storage
 from firebase_admin import db
 
-import predict as predict
+import py4_predict as predict
 #import sr04_template as template
-import labeling as label
+import py2_labelling as label
 #import sr05_remove_noise as noise
 
 import google
