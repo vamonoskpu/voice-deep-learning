@@ -48,6 +48,6 @@ def make_label(uid):
 
     print("---Success making label---")
 
-    if __name__ == '__main__':
-        user = '-M5yk1BDXigI44Jaa7Xd'
-        make_label(user);
+if __name__ == '__main__':
+    user = 'kDdNvE4mcfQsdXVmUrtJ9TAMUZm2'
+    make_label(user);

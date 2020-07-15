@@ -2,11 +2,6 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 
-# # label_list = ['아메리카노', '카페라떼',
-#               '카페모카', '카라멜마끼야또',
-#               '에스프레소', '프라푸치노',
-#               '핫초코', '플레인요거트스무디']
-
 label_list = ['아메리카노', '카페라떼',
               '카페모카', '카라멜마끼야또',
               '에스프레소', '프라푸치노',
@@ -27,10 +22,10 @@ def read_one_spect_png(image_file):
 
 
 def predict_spect(uid):
-    input_image_name = "./firebase/-M5yk1BDXigI44Jaa7Xd/using/using.png"
+    input_image_name = "./firebase/kDdNvE4mcfQsdXVmUrtJ9TAMUZm2/using/using.png"
 
-    model_path = './firebase/-M5yk1BDXigI44Jaa7Xd/model/'
-    model_name = './firebase/-M5yk1BDXigI44Jaa7Xd/model/sred_model-500.meta'
+    model_path = './firebase/kDdNvE4mcfQsdXVmUrtJ9TAMUZm2/model/'
+    model_name = './firebase/kDdNvE4mcfQsdXVmUrtJ9TAMUZm2/model/vamonos_model-500.meta'
     saver = tf.train.import_meta_graph(model_name)
 
     with tf.Session() as sess:

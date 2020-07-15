@@ -5,11 +5,11 @@ print("Tensorflow version " + tf.__version__)
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
+import os
+
 
 tf.set_random_seed(0)
-# fb_path = 'firebase/4qipuVMEx9X7gX45DcG6yY2yi6B3/'
-# fb_path = 'firebase/8ThCIEpJCNfwgPQyXIXNh73sRwB2/'
-fb_path = 'firebase/-M5yk1BDXigI44Jaa7Xd/'
+fb_path = 'firebase/kDdNvE4mcfQsdXVmUrtJ9TAMUZm2/'
 
 # label 수에 따라 설정
 NUM_CLASSES = 10
@@ -68,9 +68,8 @@ def next_batch(spect_test_imgs, spect_test_labels, loop_count, batch_size):
 print('--- reading spectrogram png ---')
 # png 파일을 ndarray로 변환
 
-# spect_train_imgs, spect_train_labels = read_spect_label('png_spectrogram2/spect_label_train.txt')
+spect_train_imgs, spect_train_labels = read_spect_label('firebase\kDdNvE4mcfQsdXVmUrtJ9TAMUZm2/spect_label_train.txt')
 # spect_test_imgs, spect_test_labels = read_spect_label('png_spectrogram2/spect_label_test.txt')
-
 #####################label_path = fb_path + 'spect_label_train.txt'
 test_path = fb_path + 'spect_label_test.txt'
 
@@ -83,7 +82,7 @@ print('--- reading spectrogram png finished! ---')
 #
 # · · · · · · · · · ·      (input data, 1-deep)                 X [batch, 32, 32, 1]
 # @ @ @ @ @ @ @ @ @ @   -- conv. layer 5x5x1=>4 stride 1        W1 [5, 5, 1, 4]        B1 [4]
-# ∶∶∶∶∶∶∶∶∶∶∶∶∶∶∶∶∶∶∶                                           Y1 [batch, 32, 32, 4]
+# ∶∶∶∶∶∶∶∶∶∶∶∶∶∶∶∶∶∶∶                                                       Y1 [batch, 32, 32, 4]
 #   @ @ @ @ @ @ @ @     -- conv. layer 5x5x4=>8 stride 2        W2 [5, 5, 4, 8]        B2 [8]
 #   ∶∶∶∶∶∶∶∶∶∶∶∶∶∶∶                                             Y2 [batch, 16, 16, 8]
 #     @ @ @ @ @ @       -- conv. layer 4x4x8=>12 stride 2       W3 [4, 4, 8, 12]       B3 [12]
@@ -95,9 +94,8 @@ print('--- reading spectrogram png finished! ---')
 
 # intput X : 이미지 크기에 따라 설정
 X = tf.placeholder(tf.float32, [None, 100, 100, 3], name='X')  ### color (spectrogram)
-
 # correct answers will go here
-Y_ = tf.placeholder(tf.float32, [None, 10], name='Y_')  # 레이블의 개수만큼 설정	###
+Y_ = tf.placeholder(tf.float32, [None, 10], name='Y_')  # 레이블의 개수만큼 설정	###ㄹ
 # step for variable learning rate
 step = tf.placeholder(tf.int32)
 dkeep = tf.placeholder(tf.float32, name='dkeep')
@@ -111,13 +109,16 @@ N = 1000  # fully connected layer
 # 가중치 W, 편향 B 설정
 W1 = tf.Variable(tf.truncated_normal([5, 5, 3, K], stddev=0.1))  # 5x5 patch, 1 input channel, K output channels
 B1 = tf.Variable(tf.ones([K]) / 10)
+
 W2 = tf.Variable(tf.truncated_normal([5, 5, K, L], stddev=0.1))
 B2 = tf.Variable(tf.ones([L]) / 10)
+
 W3 = tf.Variable(tf.truncated_normal([4, 4, L, M], stddev=0.1))
 B3 = tf.Variable(tf.ones([M]) / 10)
 
 W4 = tf.Variable(tf.truncated_normal([13 * 13 * M, N], stddev=0.1))
 B4 = tf.Variable(tf.ones([N]) / 10)
+
 W5 = tf.Variable(tf.truncated_normal([N, 10], stddev=0.1))
 B5 = tf.Variable(tf.ones([10]) / 10)
 
