@@ -156,11 +156,11 @@ correct_prediction = tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 l_times = 500  ###
-b_size = 60  ###
+b_size = 100  ###
 # learning rate : 0.0001 + 0.003 * (1/e)^(step/2000)), exponential decay from 0.003 to 0.0001
 # lr = 0.0001 + tf.train.exponential_decay(0.003, step, 2000, 1/math.e)
 # lr = 0.0001 + tf.train.exponential_decay(0.003, step, l_times, 1/math.e)
-lr = 0.0001 + tf.train.exponential_decay(0.003, step, l_times, 1 / math.e)  ###
+lr = 0.0015 + tf.train.exponential_decay(0.003, step, l_times, 1 / math.e)  ###
 train_step = tf.train.AdamOptimizer(lr).minimize(cross_entropy)
 
 # ----- tensorboard
