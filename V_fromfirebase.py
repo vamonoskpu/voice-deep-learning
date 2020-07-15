@@ -32,7 +32,7 @@ def learning_model(user_id):
 
 # convert wav file to spectrogram
 def convert_wav_file(uid, dname):
-    os.system('wts.sh firebase/%s/%s' % (uid, dname))
+    os.system('binbin.sh firebase/%s/%s' % (uid, dname))
 
     print("--- convert to spectrogram ---")
 
